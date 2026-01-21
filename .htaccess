@@ -1,4 +1,0 @@
-SetEnv DB_HOST localhost
-SetEnv DB_USER root
-SetEnv DB_PASS root
-SetEnv DB_NAME idm250
