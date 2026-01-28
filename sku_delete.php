@@ -1,9 +1,9 @@
 <?php
-require_once '../includes/auth.php';
-require_once '../includes/db_connect.php';
+require_once 'includes/auth.php';
+require_once 'includes/db_connect.php';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    header('Location: index.php');
+    header('Location: sku_index.php');
     exit;
 }
 
@@ -19,5 +19,5 @@ $stmt->execute();
 $stmt->close();
 $conn->close();
 
-header('Location: index.php');
+header('Location: sku_index.php');
 exit;

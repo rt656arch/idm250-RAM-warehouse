@@ -1,7 +1,7 @@
 <?php
-require_once '../includes/auth.php';
-require_once '../includes/db_connect.php';
-include '../includes/header.php';
+require_once 'includes/auth.php';
+require_once 'includes/db_connect.php';
+include 'includes/header.php';
 
 $conn = getDBConnection();
 $error = '';
@@ -66,9 +66,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <main>
-    <h1>Add New SKU</h1>
+    <a href="sku_index.php">← Back to SKU List</a>
 
-    <a href="../skus/index.php">← Back to SKU List</a>
+    <h1>Add New SKU</h1>
 
     <?php if ($error): ?>
         <p class="error"><?php echo htmlspecialchars($error); ?></p>
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p class="success"><?php echo htmlspecialchars($success); ?></p>
     <?php endif; ?>
 
-    <form method="POST" action="create.php" class="sku-form">
+    <form method="POST" action="sku_create.php" class="sku-form">
 
         <label>
             Ficha (Manufacturer Reference)
@@ -135,5 +135,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php
 $conn->close();
-include '../includes/footer.php';
+include 'includes/footer.php';
 ?>

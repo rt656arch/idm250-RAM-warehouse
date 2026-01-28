@@ -1,7 +1,7 @@
 <?php
-require_once '../includes/auth.php';
-require_once '../includes/db_connect.php';
-include '../includes/header.php';
+require_once 'includes/auth.php';
+require_once 'includes/db_connect.php';
+include 'includes/header.php';
 
 $conn = getDBConnection();
 
@@ -9,7 +9,7 @@ $error = '';
 $success = '';
 
 if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
-    header('Location: index.php');
+    header('Location: sku_index.php');
     exit;
 }
 
@@ -23,7 +23,7 @@ $result = $stmt->get_result();
 if ($result->num_rows !== 1) {
     $stmt->close();
     $conn->close();
-    header('Location: index.php');
+    header('Location: sku_index.php');
     exit;
 }
 
@@ -84,9 +84,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 ?>
 
 <main>
-    <h1>Edit SKU</h1>
+    <a href="sku_index.php">← Back to SKU List</a>
 
-    <a href="../skus/index.php">← Back to SKU List</a>
+    <h1>Edit SKU</h1>
 
     <?php if ($error): ?>
         <p class="error"><?php echo htmlspecialchars($error); ?></p>
@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p class="success"><?php echo htmlspecialchars($success); ?></p>
     <?php endif; ?>
 
-    <form method="POST" action="edit.php?id=<?php echo $sku_id; ?>" class="sku-form">
+    <form method="POST" action="sku_edit.php?id=<?php echo $sku_id; ?>" class="sku-form">
 
         <label>
             Ficha (Manufacturer Reference)
@@ -153,5 +153,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <?php
 $conn->close();
-include '../includes/footer.php';
+include 'includes/footer.php';
 ?>
