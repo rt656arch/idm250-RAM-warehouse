@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg" sizes="32x32" href="../assets/logo-ram.svg">
-    <link rel="icon" type="image/svg" sizes="16x16" href="../assets/logo-ram.svg">
+    <link rel="icon" type="image/svg" sizes="32x32" href="assets/logo-ram.svg">
+    <link rel="icon" type="image/svg" sizes="16x16" href="assets/logo-ram.svg">
 
     <title>IDM-250 | RAM Warehouse</title>
-    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
 </head>
 <body>
 
@@ -21,7 +21,7 @@ $user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : '';
 
 <header class="site-header">
     <div class="navbar">
-        <a href="index.php"><img class="logo" src="../assets/logo-ram.png" alt="Placeholder Logo"></a>
+        <a href="/index.php"><img class="logo" src="assets/logo-ram.png" alt="Placeholder Logo"></a>
 
         <div class="menu-toggle">
             <span class="bar"></span>
