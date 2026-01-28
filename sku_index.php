@@ -1,7 +1,7 @@
 <?php
-require_once '../includes/auth.php';
-require_once '../includes/db_connect.php';
-include '../includes/header.php';
+require_once 'includes/auth.php';
+require_once 'includes/db_connect.php';
+include 'includes/header.php';
 // include __DIR__ . '/../includes/header.php';
 
 $conn = getDBConnection();
@@ -24,9 +24,10 @@ $result = $conn->query($sql);
 ?>
 
 <main>
+    <a href="dashboard.php">← Back to Dashboard</a>
     <h1>SKU Management</h1>
 
-    <a href="create.php" class="btn">Add New SKU</a>
+    <a href="sku_create.php" class="btn">Add New SKU</a>
 
     <?php if ($result->num_rows > 0): ?>
         <table>
@@ -69,8 +70,8 @@ $result = $conn->query($sql);
                 <td><?php echo htmlspecialchars($sku['weight_lbs']); ?></td>
 
                 <td>
-                <a href="edit.php?id=<?php echo $sku['sku_id']; ?>">Edit</a> |
-                <a href="delete.php?id=<?php echo $sku['sku_id']; ?>"
+                <a href="sku_edit.php?id=<?php echo $sku['sku_id']; ?>">Edit</a> |
+                <a href="sku_delete.php?id=<?php echo $sku['sku_id']; ?>"
                     onclick="return confirm('Are you sure you want to delete this SKU?');">
                     Delete
                 </a>
@@ -88,5 +89,5 @@ $result = $conn->query($sql);
 <?php
 $conn->close();
 
-include '../includes/footer.php';
+include 'includes/footer.php';
 ?>
