@@ -2,3 +2,5 @@
 _htaccess
 
 .DS_Store
+
+.env
