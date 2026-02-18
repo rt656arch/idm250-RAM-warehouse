@@ -2,8 +2,8 @@
 
 return [
     'DB_HOST' => 'localhost',
-    'DB_USER' => 'root',
-    'DB_PASS' =>  'root',
-    'DB_NAME' => 'IDM250_RAM_WAREHOUSE',
+    'DB_USER' => 'rt656',
+    'DB_PASS' =>  'c0ma2eglQOz3p3Lf',
+    'DB_NAME' => 'rt656_db',
     'X-API-KEY' => 'complicated-api-key-name'
 ];
