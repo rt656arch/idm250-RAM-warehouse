@@ -7,7 +7,7 @@
     <link rel="icon" type="image/svg" sizes="16x16" href="assets/images/logo-ram.svg">
 
     <title>IDM-250 | RAM Warehouse</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
+    <link rel="stylesheet" href="assets/style.css" />
 </head>
 <body>
 
