@@ -1,5 +1,7 @@
 <?php
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 if (isset($_SESSION['user_id'])) {
     header('Location: dashboard.php');
@@ -18,8 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($email) || empty($password)) {
         $error = 'Please fill in all fields.';
     } else {
-        $conn = getDBConnection();
-        $stmt = $conn->prepare("SELECT user_id, email, password, first_name FROM users WHERE email = ?");
+        $stmt = $connection->prepare("SELECT user_id, email, password, first_name FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -43,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
         
         $stmt->close();
-        $conn->close();
+        $connection->close();
     }
 }
 ?>

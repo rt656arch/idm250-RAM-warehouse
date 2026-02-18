@@ -1,12 +1,13 @@
 <?php
-session_start();
+if (!defined('API_REQUEST') && session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-if (!isset($_SESSION['user_id'])) {
+if (!defined('API_REQUEST') && !isset($_SESSION['user_id'])) {
     header('Location: /login.php');
     exit;
 }
 
-//checking config, headers, keys  
 function check_api_key($env) {
     $valid_key = $env['X-API-KEY'];
     $provided_key = null; //this comes from the other team, through headers

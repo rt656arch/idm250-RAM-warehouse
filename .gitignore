@@ -1,6 +1,1 @@
-.htaccess
-_htaccess
-
-.DS_Store
-
-.env
+.env.php

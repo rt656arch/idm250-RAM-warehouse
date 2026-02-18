@@ -4,6 +4,6 @@ return [
     'DB_HOST' => 'localhost',
     'DB_USER' => 'root',
     'DB_PASS' =>  'root',
-    'DB_NAME' => 'rt656_db',
-    'X-API-KEY' => 'demo-api-key-x123'
+    'DB_NAME' => 'my_database',
+    'X-API-KEY' => 'complicated-api-key-name'
 ];
