@@ -1,0 +1,798 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>RAM WMS API</title>
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+          sans-serif;
+        font-size: 16px;
+        line-height: 1.6;
+        color: #1a1a1a;
+        background: #f5f5f5;
+      }
+
+      header {
+        background: #1a1a2e;
+        color: #fff;
+        padding: 2rem 2.5rem;
+      }
+
+      header h1 {
+        font-size: 1.8rem;
+        font-weight: 700;
+        letter-spacing: -0.5px;
+      }
+
+      header p {
+        margin-top: 0.35rem;
+        color: #a0aec0;
+        font-size: 0.95rem;
+      }
+
+      .container {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 2.5rem 1.5rem;
+      }
+
+      /* ── Section headings ─────────────────────────────────────────────── */
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
+      }
+      h2 {
+        font-size: 1.4rem;
+        margin: 2.5rem 0 0.75rem;
+        border-bottom: 2px solid #e2e8f0;
+        padding-bottom: 0.4rem;
+      }
+      h3 {
+        font-size: 1.05rem;
+        margin: 1.2rem 0 0.5rem;
+        color: #2d3748;
+      }
+
+      /* ── Base URL box ─────────────────────────────────────────────────── */
+      .base-url {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-left: 4px solid #4a5568;
+        border-radius: 6px;
+        padding: 1rem 1.25rem;
+        margin: 1rem 0 2rem;
+      }
+      .base-url p {
+        color: #4a5568;
+        font-size: 0.9rem;
+        margin-bottom: 0.3rem;
+      }
+      .base-url code {
+        font-family: "Courier New", monospace;
+        font-size: 0.95rem;
+        color: #1a1a1a;
+      }
+
+      /* ── Auth table ───────────────────────────────────────────────────── */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 0.75rem 0 1.25rem;
+        font-size: 0.92rem;
+      }
+      th {
+        background: #edf2f7;
+        text-align: left;
+        padding: 0.55rem 0.9rem;
+        font-weight: 600;
+        border: 1px solid #e2e8f0;
+      }
+      td {
+        padding: 0.55rem 0.9rem;
+        border: 1px solid #e2e8f0;
+        vertical-align: top;
+      }
+      tr:nth-child(even) td {
+        background: #f9fafb;
+      }
+
+      /* ── Endpoint cards ───────────────────────────────────────────────── */
+      .endpoint {
+        background: #fff;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+        margin-bottom: 2rem;
+        overflow: hidden;
+      }
+
+      .endpoint-header {
+        display: flex;
+        align-items: center;
+        gap: 0.85rem;
+        padding: 1rem 1.25rem;
+        border-bottom: 1px solid #e2e8f0;
+      }
+
+      .method {
+        display: inline-block;
+        padding: 0.25rem 0.65rem;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+        font-family: "Courier New", monospace;
+      }
+
+      .method.post {
+        background: #c6f6d5;
+        color: #22543d;
+      }
+      .method.get {
+        background: #bee3f8;
+        color: #1a365d;
+      }
+      .method.put {
+        background: #fefcbf;
+        color: #744210;
+      }
+      .method.delete {
+        background: #fed7d7;
+        color: #742a2a;
+      }
+      .method.unavailable {
+        background: #e2e8f0;
+        color: #718096;
+      }
+
+      .endpoint-path {
+        font-family: "Courier New", monospace;
+        font-size: 0.95rem;
+        color: #2d3748;
+      }
+
+      .endpoint-body {
+        padding: 1.25rem 1.5rem;
+      }
+
+      .endpoint-body > p {
+        color: #4a5568;
+        margin-bottom: 1rem;
+      }
+
+      /* ── Code blocks ──────────────────────────────────────────────────── */
+      pre {
+        background: #1a1a2e;
+        color: #e2e8f0;
+        border-radius: 6px;
+        padding: 1rem 1.25rem;
+        overflow-x: auto;
+        font-size: 0.85rem;
+        line-height: 1.55;
+        margin: 0.5rem 0 1rem;
+      }
+
+      code {
+        font-family: "Courier New", monospace;
+      }
+
+      p code,
+      li code,
+      td code {
+        background: #edf2f7;
+        padding: 0.1rem 0.35rem;
+        border-radius: 3px;
+        font-size: 0.88rem;
+        color: #c53030;
+      }
+
+      /* ── Notes ────────────────────────────────────────────────────────── */
+      .note {
+        background: #ebf8ff;
+        border-left: 4px solid #3182ce;
+        border-radius: 0 6px 6px 0;
+        padding: 0.75rem 1rem;
+        margin: 0.75rem 0;
+        font-size: 0.91rem;
+        color: #2c5282;
+      }
+
+      .note.warn {
+        background: #fffbeb;
+        border-left-color: #d69e2e;
+        color: #744210;
+      }
+
+      /* ── Response label ───────────────────────────────────────────────── */
+      .response-label {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #718096;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin: 1.25rem 0 0.3rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>RAM WMS API</h1>
+      <p>Warehouse Management System — API Reference</p>
+    </header>
+
+    <div class="container">
+      <h1>RAM WMS API</h1>
+
+      <div class="base-url">
+        <p>Base URL</p>
+        <code>https://digmstudents.westphal.drexel.edu/~rt656/ram/api/v1</code>
+      </div>
+
+      <!-- ── Authentication ──────────────────────────────────────────────── -->
+      <h2>Authentication</h2>
+      <p>All requests require an API key passed in the request header.</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Header</th>
+            <th>Required</th>
+            <th>Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><code>x-api-key</code></td>
+            <td>Yes</td>
+            <td>ram-key-2026</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- ════════════════════════════════════════════════════════════════════
+         SKUs
+    ═════════════════════════════════════════════════════════════════════ -->
+      <h2>SKUs</h2>
+
+      <!-- POST /api/v1/skus.php -->
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method post">POST</span>
+          <span class="endpoint-path">/api/v1/skus.php</span>
+        </div>
+        <div class="endpoint-body">
+          <p>
+            Creates a new SKU or updates an existing one if the SKU code already
+            exists (upsert behavior).
+          </p>
+
+          <h3>Required Body Parameters</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>sku</code></td>
+                <td>string</td>
+                <td>Unique SKU code</td>
+              </tr>
+              <tr>
+                <td><code>description</code></td>
+                <td>string</td>
+                <td>Product description</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Optional Body Parameters</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Default</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ficha</code></td>
+                <td>integer</td>
+                <td>0</td>
+                <td>Internal ficha / reference number</td>
+              </tr>
+              <tr>
+                <td><code>uom_primary</code></td>
+                <td>string</td>
+                <td>BUNDLE</td>
+                <td>
+                  Primary unit of measure (<code>BUNDLE</code> or
+                  <code>PALLET</code>)
+                </td>
+              </tr>
+              <tr>
+                <td><code>piece_count</code></td>
+                <td>integer</td>
+                <td>0</td>
+                <td>Pieces per unit</td>
+              </tr>
+              <tr>
+                <td><code>length_inches</code></td>
+                <td>decimal</td>
+                <td>0</td>
+                <td>Length in inches</td>
+              </tr>
+              <tr>
+                <td><code>width_inches</code></td>
+                <td>decimal</td>
+                <td>0</td>
+                <td>Width in inches</td>
+              </tr>
+              <tr>
+                <td><code>height_inches</code></td>
+                <td>decimal</td>
+                <td>0</td>
+                <td>Height in inches</td>
+              </tr>
+              <tr>
+                <td><code>weight_lbs</code></td>
+                <td>decimal</td>
+                <td>0</td>
+                <td>Weight in pounds</td>
+              </tr>
+              <tr>
+                <td><code>assembly</code></td>
+                <td>string</td>
+                <td>false</td>
+                <td>
+                  Requires assembly (<code>true</code> / <code>false</code>)
+                </td>
+              </tr>
+              <tr>
+                <td><code>rate</code></td>
+                <td>decimal</td>
+                <td>0</td>
+                <td>Handling rate</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Example Call (PHP)</h3>
+          <pre><code>$api_url = 'https://digmstudents.westphal.drexel.edu/~rt656/ram/api/v1/skus.php';
+$api_key = 'ram-key-2026';
+
+$sku_data = [
+    'sku'            => '1720813-0132',
+    'description'    => 'MDF ST LX C2-- 2465X1245X05.7MM P/EF/132',
+    'ficha'          => 724,
+    'uom_primary'    => 'BUNDLE',
+    'piece_count'    => 250,
+    'length_inches'  => 96.00,
+    'width_inches'   => 39.00,
+    'height_inches'  => 29.65,
+    'weight_lbs'     => 3945.22,
+    'assembly'       => 'false',
+    'rate'           => 15.16
+];
+
+$options = [
+    'http' => [
+        'method'  => 'POST',
+        'header'  => "x-api-key: $api_key\r\n" .
+                     "Content-Type: application/json\r\n",
+        'content' => json_encode($sku_data)
+    ]
+];
+
+$context  = stream_context_create($options);
+$response = file_get_contents($api_url, false, $context);
+$result   = json_decode($response, true);</code></pre>
+
+          <p class="response-label">Response (201 — Created)</p>
+          <pre><code>{
+    "success": true,
+    "id": 31
+}</code></pre>
+
+          <p class="response-label">Response (200 — Updated)</p>
+          <pre><code>{
+    "success": true,
+    "message": "SKU updated"
+}</code></pre>
+
+          <p class="response-label">Error Response (400)</p>
+          <pre><code>{
+    "error": "Bad Request",
+    "details": "Missing required fields: sku, description"
+}</code></pre>
+
+          <p class="response-label">Error Response (405)</p>
+          <pre><code>{
+    "error": "Method Not Allowed"
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════════════
+         MPLs
+    ═════════════════════════════════════════════════════════════════════ -->
+      <h2>MPLs (Master Packing Lists)</h2>
+
+      <!-- POST /api/v1/mpls.php -->
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method post">POST</span>
+          <span class="endpoint-path">/api/v1/mpls.php</span>
+        </div>
+        <div class="endpoint-body">
+          <p>
+            Creates a new MPL (Master Packing List) in the WMS. Each MPL
+            represents an inbound shipment with one or more inventory units. If
+            a SKU code on an item does not exist in the WMS, it can be
+            auto-created by supplying <code>sku_details</code>.
+          </p>
+
+          <h3>Required Body Parameters</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>reference_number</code></td>
+                <td>string</td>
+                <td>Unique MPL reference number</td>
+              </tr>
+              <tr>
+                <td><code>items</code></td>
+                <td>array</td>
+                <td>Array of item objects (see below)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Optional Body Parameters</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>trailer_number</code></td>
+                <td>string</td>
+                <td>Trailer / container number</td>
+              </tr>
+              <tr>
+                <td><code>expected_arrival</code></td>
+                <td>string</td>
+                <td>Expected arrival date (<code>YYYY-MM-DD</code>)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Item Object Fields</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>unit_id</code></td>
+                <td>string</td>
+                <td>Yes</td>
+                <td>Unique unit identifier (barcode / label)</td>
+              </tr>
+              <tr>
+                <td><code>sku</code></td>
+                <td>string</td>
+                <td>Yes</td>
+                <td>SKU code for this unit</td>
+              </tr>
+              <tr>
+                <td><code>sku_details</code></td>
+                <td>object</td>
+                <td>No</td>
+                <td>
+                  Full SKU data object — required only if the SKU does not
+                  already exist in the WMS (auto-creates the SKU)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="note">
+            <strong>Auto-create behavior:</strong> If a SKU code is not found in
+            the WMS and <code>sku_details</code> is provided, the SKU is
+            automatically created before the MPL is saved. If the SKU is missing
+            and no <code>sku_details</code> are given, the request is rejected
+            with a 400 error listing the missing SKU codes.
+          </div>
+
+          <h3>Example Call (PHP)</h3>
+          <pre><code>$api_url = 'https://digmstudents.westphal.drexel.edu/~rt656/ram/api/v1/mpls.php';
+$api_key = 'ram-key-2026';
+
+$mpl_data = [
+    'reference_number' => 'MPL-2024-00123',
+    'trailer_number'   => 'TRL-9988',
+    'expected_arrival' => '2024-08-15',
+    'items'            => [
+        [
+            'unit_id' => 'UNIT-001-A',
+            'sku'     => '1720813-0132'
+        ],
+        [
+            'unit_id'     => 'UNIT-002-B',
+            'sku'         => '1720899-0001',   // new SKU — provide details
+            'sku_details' => [
+                'description'   => 'NEW SPECIES 2X4X8FT KD',
+                'ficha'         => 999,
+                'uom_primary'   => 'BUNDLE',
+                'piece_count'   => 200,
+                'length_inches' => 96.00,
+                'width_inches'  => 42.00,
+                'height_inches' => 36.00,
+                'weight_lbs'    => 2900.00,
+                'assembly'      => 'false',
+                'rate'          => 15.00
+            ]
+        ]
+    ]
+];
+
+$options = [
+    'http' => [
+        'method'  => 'POST',
+        'header'  => "x-api-key: $api_key\r\n" .
+                     "Content-Type: application/json\r\n",
+        'content' => json_encode($mpl_data)
+    ]
+];
+
+$context  = stream_context_create($options);
+$response = file_get_contents($api_url, false, $context);
+$result   = json_decode($response, true);</code></pre>
+
+          <p class="response-label">Response (200)</p>
+          <pre><code>{
+    "success": true,
+    "message": "MPL received",
+    "mpl_id": 42
+}</code></pre>
+
+          <p class="response-label">
+            Error Response (400 — Missing reference or items)
+          </p>
+          <pre><code>{
+    "error": "Bad Request",
+    "details": "Missing reference_number or items"
+}</code></pre>
+
+          <p class="response-label">Error Response (400 — Unknown SKUs)</p>
+          <pre><code>{
+    "error": "Bad Request",
+    "details": "Missing SKUs in WMS: 1720899-0001. Provide full SKU details to auto-create."
+}</code></pre>
+
+          <p class="response-label">Error Response (409 — Duplicate MPL)</p>
+          <pre><code>{
+    "error": "Conflict",
+    "details": "MPL already exists"
+}</code></pre>
+
+          <p class="response-label">Error Response (405)</p>
+          <pre><code>{
+    "error": "Method Not Allowed"
+}</code></pre>
+        </div>
+      </div>
+
+      <!-- ════════════════════════════════════════════════════════════════════
+         Orders
+    ═════════════════════════════════════════════════════════════════════ -->
+      <h2>Orders</h2>
+
+      <!-- POST /api/v1/orders.php -->
+      <div class="endpoint">
+        <div class="endpoint-header">
+          <span class="method post">POST</span>
+          <span class="endpoint-path">/api/v1/orders.php</span>
+        </div>
+        <div class="endpoint-body">
+          <p>
+            Creates a new outbound order in the WMS. Every unit listed in
+            <code>items</code> must already exist in the WMS inventory; orders
+            for units not in stock are rejected.
+          </p>
+
+          <h3>Required Body Parameters</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>order_number</code></td>
+                <td>string</td>
+                <td>Unique order / reference number</td>
+              </tr>
+              <tr>
+                <td><code>items</code></td>
+                <td>array</td>
+                <td>Array of item objects (see below)</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Optional Body Parameters</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>ship_to_company</code></td>
+                <td>string</td>
+                <td>Recipient company name</td>
+              </tr>
+              <tr>
+                <td><code>ship_to_street</code></td>
+                <td>string</td>
+                <td>Street address</td>
+              </tr>
+              <tr>
+                <td><code>ship_to_city</code></td>
+                <td>string</td>
+                <td>City</td>
+              </tr>
+              <tr>
+                <td><code>ship_to_state</code></td>
+                <td>string</td>
+                <td>2-letter state abbreviation</td>
+              </tr>
+              <tr>
+                <td><code>ship_to_zip</code></td>
+                <td>string</td>
+                <td>ZIP code</td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3>Item Object Fields</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>unit_id</code></td>
+                <td>string</td>
+                <td>Yes</td>
+                <td>Unique unit identifier — must exist in WMS inventory</td>
+              </tr>
+              <tr>
+                <td><code>sku</code></td>
+                <td>string</td>
+                <td>No</td>
+                <td>
+                  SKU code (looked up automatically from inventory if omitted)
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <div class="note warn">
+            <strong>Inventory check:</strong> All <code>unit_id</code> values
+            are validated against current WMS inventory before the order is
+            saved. If any unit is not in stock, the entire request is rejected
+            and no order is created.
+          </div>
+
+          <h3>Example Call (PHP)</h3>
+          <pre><code>$api_url = 'https://digmstudents.westphal.drexel.edu/~rt656/ram/api/v1/orders.php';
+$api_key = 'ram-key-2026';
+
+$order_data = [
+    'order_number'    => 'ORD-2024-00789',
+    'ship_to_company' => 'Acme Lumber Co.',
+    'ship_to_street'  => '123 Main St',
+    'ship_to_city'    => 'Philadelphia',
+    'ship_to_state'   => 'PA',
+    'ship_to_zip'     => '19103',
+    'items'           => [
+        ['unit_id' => 'UNIT-001-A', 'sku' => '1720813-0132'],
+        ['unit_id' => 'UNIT-003-C']    // sku looked up from inventory
+    ]
+];
+
+$options = [
+    'http' => [
+        'method'  => 'POST',
+        'header'  => "x-api-key: $api_key\r\n" .
+                     "Content-Type: application/json\r\n",
+        'content' => json_encode($order_data)
+    ]
+];
+
+$context  = stream_context_create($options);
+$response = file_get_contents($api_url, false, $context);
+$result   = json_decode($response, true);</code></pre>
+
+          <p class="response-label">Response (200)</p>
+          <pre><code>{
+    "success": true,
+    "message": "Order received",
+    "order_id": 17
+}</code></pre>
+
+          <p class="response-label">Error Response (400 — Missing fields)</p>
+          <pre><code>{
+    "error": "Bad Request",
+    "details": "Missing order_number or items"
+}</code></pre>
+
+          <p class="response-label">
+            Error Response (400 — Units not in stock)
+          </p>
+          <pre><code>{
+    "error": "Bad Request",
+    "details": "Units not in WMS inventory: UNIT-001-A, UNIT-003-C"
+}</code></pre>
+
+          <p class="response-label">Error Response (409 — Duplicate order)</p>
+          <pre><code>{
+    "error": "Conflict",
+    "details": "Order already exists"
+}</code></pre>
+
+          <p class="response-label">Error Response (405)</p>
+          <pre><code>{
+    "error": "Method Not Allowed"
+}</code></pre>
+        </div>
+      </div>
+    </div>
+    <!-- /container -->
+  </body>
+</html>

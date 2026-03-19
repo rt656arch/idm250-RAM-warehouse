@@ -1,52 +1,20 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/svg" sizes="32x32" href="assets/images/logo-ram.svg">
-    <link rel="icon" type="image/svg" sizes="16x16" href="assets/images/logo-ram.svg">
-
-    <title>IDM-250 | RAM Warehouse</title>
-    <link rel="stylesheet" href="assets/css/style.css" />
-</head>
-<body>
-
 <?php
-if (session_status() === PHP_SESSION_NONE) {
-    session_start();
-}
-$is_logged_in = isset($_SESSION['user_id']);
-$user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : '';
+$current = basename($_SERVER['PHP_SELF']);
 ?>
-
-<header class="site-header">
-    <div class="navbar">
-        <a href="index.php"><img class="logo" src="assets/images/logo-ram.png" alt="Placeholder Logo"></a>
-
-        <div class="menu-toggle">
-            <span class="bar"></span>
-            <span class="bar"></span>
-            <span class="bar"></span>
-        </div>
-
-        <nav class="nav-links">
-            <ul>
-                <li><a href="index.php">Home</a></li>
-                <li><a href="help.php">Help</a></li>
-            </ul>
-        </nav>
-
-        <div class="login">
-            <?php if ($is_logged_in): ?>
-                <button class="login-button">
-                    <a href="logout.php">Log Out</a>
-                </button>
-            <?php else: ?>
-                <button class="login-button">
-                    <a href="login.php">Log In</a>
-                </button>
-            <?php endif; ?>
-        </div>
+<header class="topbar">
+    <img src="assets/logo-ram.svg" alt="RAM WMS" class="topbar-logo">
+    <nav class="topbar-nav">
+        <a href="dashboard.php"  class="<?php if ($current == 'dashboard.php')                                               echo 'active'; ?>">Dashboard</a>
+        <a href="skus.php"       class="<?php if ($current == 'skus.php')                                                    echo 'active'; ?>">SKUs</a>
+        <a href="inventory.php"  class="<?php if ($current == 'inventory.php')                                               echo 'active'; ?>">Inventory</a>
+        <a href="mpls.php"       class="<?php if ($current == 'mpls.php'       || $current == 'mpl_detail.php')             echo 'active'; ?>">MPLs</a>
+        <a href="orders.php"     class="<?php if ($current == 'orders.php'     || $current == 'order_detail.php')           echo 'active'; ?>">Orders</a>
+        <a href="shipped.php"    class="<?php if ($current == 'shipped.php')                                                 echo 'active'; ?>">Shipped</a>
+    </nav>
+    <div class="topbar-user">
+        <?php echo htmlspecialchars($_SESSION['username']); ?>
+        &nbsp;|&nbsp;
+        <a href="logout.php">Log out</a>
     </div>
 </header>
-
+<div class="page-wrap">
